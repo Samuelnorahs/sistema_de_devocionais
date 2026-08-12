@@ -1,0 +1,164 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Run: npm run db:seed
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  EQUIPE
+  PASTOR
+  ADMIN
+}
+
+enum SermonStatus {
+  RECEBENDO_AUDIO
+  TRANSCREVENDO
+  ANALISANDO
+  CRIANDO_DEVOCIONAIS
+  PRONTO_REVISAO
+  PUBLICADO
+  ERRO
+}
+
+enum DevotionalStatus {
+  RASCUNHO
+  APROVADO
+  PUBLICADO
+}
+
+enum WeekDay {
+  SEGUNDA
+  TERCA
+  QUARTA
+  QUINTA
+  SEXTA
+  SABADO
+}
+
+enum JobType {
+  TRANSCRIBE
+  ANALYZE
+  GENERATE_DEVOTIONALS
+}
+
+enum JobStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  passwordHash  String
+  role          UserRole  @default(EQUIPE)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  editedDevotionals Devotional[] @relation("EditedBy")
+  auditLogs         AuditLog[]
+}
+
+model Sermon {
+  id            String       @id @default(cuid())
+  title         String
+  date          DateTime
+  preacher      String
+  audioUrl      String
+  status        SermonStatus @default(RECEBENDO_AUDIO)
+  errorMessage  String?
+  publishedAt   DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  transcription   Transcription?
+  analysis        SermonAnalysis?
+  devotionals     Devotional[]
+  jobs            ProcessingJob[]
+}
+
+model Transcription {
+  id        String   @id @default(cuid())
+  sermonId  String   @unique
+  fullText  String   @db.Text
+  createdAt DateTime @default(now())
+
+  sermon Sermon @relation(fields: [sermonId], references: [id], onDelete: Cascade)
+}
+
+model SermonAnalysis {
+  id                    String   @id @default(cuid())
+  sermonId              String   @unique
+  centralTheme          String
+  mainBibleText         String
+  otherTexts            String[]
+  objective             String   @db.Text
+  taughtPoints          String[]
+  spiritualPrinciples   String[]
+  practicalApplications String[]
+  keyPhrases            String[]
+  logicalSequence       String   @db.Text
+  rawJson               Json?
+  createdAt             DateTime @default(now())
+
+  sermon Sermon @relation(fields: [sermonId], references: [id], onDelete: Cascade)
+}
+
+model Devotional {
+  id                String           @id @default(cuid())
+  sermonId          String
+  dayOfWeek         WeekDay
+  verse             String
+  title             String
+  reflection        String           @db.Text
+  personalApplication String         @db.Text
+  reflectionQuestion String          @db.Text
+  prayer            String           @db.Text
+  practicalChallenge String          @db.Text
+  status            DevotionalStatus @default(RASCUNHO)
+  editedById        String?
+  editedAt          DateTime?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  sermon    Sermon @relation(fields: [sermonId], references: [id], onDelete: Cascade)
+  editedBy  User?  @relation("EditedBy", fields: [editedById], references: [id])
+
+  @@unique([sermonId, dayOfWeek])
+}
+
+model ProcessingJob {
+  id           String    @id @default(cuid())
+  sermonId     String
+  type         JobType
+  status       JobStatus @default(PENDING)
+  errorMessage String?
+  attempts     Int       @default(0)
+  startedAt    DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime  @default(now())
+
+  sermon Sermon @relation(fields: [sermonId], references: [id], onDelete: Cascade)
+
+  @@index([sermonId, type])
+  @@index([status])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String
+  action     String
+  entityType String
+  entityId   String
+  details    Json?
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}

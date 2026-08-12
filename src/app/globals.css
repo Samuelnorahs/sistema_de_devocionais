@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gold-50: #fdf9ef;
+  --color-gold-100: #f9f0d5;
+  --color-gold-200: #f2deaa;
+  --color-gold-300: #e9c674;
+  --color-gold-400: #dfad3f;
+  --color-gold-500: #c9952a;
+  --color-gold-600: #a87620;
+  --color-gold-700: #865a1c;
+  --color-gold-800: #6f491e;
+  --color-gold-900: #5c3d1d;
+  --color-gold-950: #341f0c;
+
+  --color-navy-50: #f0f4f8;
+  --color-navy-100: #d9e2ec;
+  --color-navy-200: #bcccdc;
+  --color-navy-300: #9fb3c8;
+  --color-navy-400: #829ab1;
+  --color-navy-500: #627d98;
+  --color-navy-600: #486581;
+  --color-navy-700: #334e68;
+  --color-navy-800: #243b53;
+  --color-navy-900: #102a43;
+  --color-navy-950: #0a1929;
+
+  --font-serif: "Georgia", "Times New Roman", serif;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-navy-900);
+  background-color: var(--color-gold-50);
+}
+
+h1, h2, h3 {
+  font-family: var(--font-serif);
+}
+
+.prose-devotional p {
+  margin-bottom: 1rem;
+  line-height: 1.75;
+}
+
+@keyframes pulse-gold {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.animate-pulse-gold {
+  animation: pulse-gold 2s ease-in-out infinite;
+}
