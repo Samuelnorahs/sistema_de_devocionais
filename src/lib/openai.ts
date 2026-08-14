@@ -8,7 +8,12 @@ export function getOpenAI(): OpenAI {
     if (!apiKey) {
       throw new Error("OPENAI_API_KEY não configurada");
     }
-    openaiInstance = new OpenAI({ apiKey });
+    openaiInstance = new OpenAI({ apiKey,
+      baseURL: "https://api.groq.com/openai/v1",
+      defaultHeaders: {
+        Authorization: `Bearer ${apiKey}`,
+      },
+     });
   }
   return openaiInstance;
 }
@@ -107,7 +112,7 @@ export async function transcribeAudio(audioBuffer: Buffer, filename: string): Pr
 
   const response = await openai.audio.transcriptions.create({
     file,
-    model: "whisper-1",
+    model: "whisper-large-v3",
     language: "pt",
     response_format: "text",
   });
@@ -119,7 +124,7 @@ export async function analyzeSermon(transcription: string): Promise<SermonAnalys
   const openai = getOpenAI();
 
   const response = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
+    model: "llama-3.3-70b-versatile",
     messages: [
       { role: "system", content: ANALYSIS_SYSTEM_PROMPT },
       { role: "user", content: ANALYSIS_USER_PROMPT(transcription) },
@@ -140,7 +145,7 @@ export async function generateDevotionals(
   const openai = getOpenAI();
 
   const response = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
+    model: "llama-3.3-70b-versatile",
     messages: [
       { role: "system", content: DEVOTIONAL_SYSTEM_PROMPT },
       { role: "user", content: DEVOTIONAL_USER_PROMPT(analysis) },
