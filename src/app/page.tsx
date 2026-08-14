@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { PublicHeader, PublicFooter } from "@/components/PublicHeader";
-import { DoveLogo } from "@/components/DoveLogo";
+import { DoveLogo } from "@/components/DoveLogo"; //Logo da igreja icdp
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { getTodaysDevotional, getPublishedSermons } from "@/actions/sermon";
@@ -40,7 +40,6 @@ export default async function HomePage() {
               <Card className="overflow-hidden">
                 <div className="bg-gold-500 px-6 py-3">
                   <p className="text-gold-100 text-sm">
-                    teste
                     Devocional de {today ? getWeekDayLabel(today) : "hoje"} ·{" "}
                     {formatDateLong(new Date())}
                   </p>

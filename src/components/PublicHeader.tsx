@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { DoveLogo } from "./DoveLogo";
+import { DoveLogo } from "./DoveLogo"; // Logo da igreja icdp
 
 export function PublicHeader() {
   return (
     <header className="border-b border-gold-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="mx-auto max-w-3xl px-4 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3 group">
-          <DoveLogo className="w-10 h-10 text-gold-500 group-hover:text-gold-600 transition-colors" />
+          {/* <DoveLogo className="w-10 h-10 text-gold-500 group-hover:text-gold-600 transition-colors" /> Logo da igreja icdp*/}
           <div>
             <span className="font-serif text-lg font-semibold text-navy-900">
               Deus Proverá
