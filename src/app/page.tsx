@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { getTodaysDevotional, getPublishedSermons } from "@/actions/sermon";
 import { getCurrentWeekDay, getWeekDayLabel } from "@/lib/constants";
 import { formatDateLong } from "@/lib/utils";
+import Logo from "@/public/images/Logo.png";
 
 // Passos do formato "Palavra da Semana" e áreas de oração diárias.
 // Conteúdo estático de apresentação — não depende de dados do banco.
@@ -70,7 +71,7 @@ export default async function HomePage() {
 
             <div className="relative mx-auto mb-8 h-28 w-28">
               <Image
-                src="/images/logo-pomba-dourada.png"
+                src={Logo}
                 alt="Pomba dourada, símbolo da Igreja Cristã Deus Proverá"
                 fill
                 priority
@@ -202,7 +203,7 @@ export default async function HomePage() {
                 <CardContent className="py-14 text-center bg-white">
                   <div className="relative mx-auto mb-4 h-12 w-12 opacity-40">
                     <Image
-                      src="/images/logo-pomba-dourada.png"
+                      src={Logo}
                       alt=""
                       fill
                       className="object-contain"
